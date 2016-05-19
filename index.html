@@ -1,29 +1,19 @@
 ---
-layout: default
+layout: layout
 ---
-<header class="masthead">
-  <h1 class="masthead-title">
-    <a href="{{ site.baseurl }}/">{{ site.name }}<span>&#39;s blog</span></a>
-  </h1>
-  <nav class="masthead-nav">
-    {% for nav in site.nav %}
-    <a href="{{ nav.href }}">{{ nav.name }}</a>
+
+<section class="twelve columns">
+
+    <h1>Blog Posts</h1>
+    {% for post in site.posts %}
+    <article>
+        <header>
+            <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a><h1>
+        </header>
+        <p>
+            ipsum...
+        </p>
+    </article>
     {% endfor %}
-  </nav>
-</header>
-<div class="content list">
-{% if site.posts.size == 0 %}
-  <h2>No post found</h2>
-{% else %}
-{% for post in site.posts %}
-  <div class="list-item">
-    <h2 class="list-post-title">
-      <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-    </h2>
-    <div class="list-post-date">
-      <time>{{ post.date | date_to_string }}</time>
-    </div>
-  </div>
-{% endfor %}
-{% endif %}
-</div>
+</section>
+
