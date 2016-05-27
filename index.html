@@ -2,18 +2,37 @@
 layout: layout
 ---
 
-<section class="twelve columns">
+<section class="seven columns">
 
-    <h1>Blog Posts</h1>
+    <h1>Data Structures & Algorithms</h1>
     {% for post in site.posts %}
-    <article>
-        <header>
-            <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a><h1>
-        </header>
-        <p>
-            ipsum...
-        </p>
-    </article>
+        {% if post.category == 'Data Structures & Algorithms' %}
+            <article>
+                <header>
+                    <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a><h1>
+                </header>
+                <p>
+                    {{ post.short_desc }}
+                </p>
+            </article>
+        {% endif %}
     {% endfor %}
 </section>
 
+
+<section class="seven columns">
+
+    <h1>Data Science & Statistics</h1>
+    {% for post in site.posts %}
+        {% if post.category == 'Data Science & Statistics' %}
+            <article>
+                <header>
+                    <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a><h1>
+                </header>
+                <p>
+                    {{ post.short_desc }}
+                </p>
+            </article>
+        {% endif %}
+    {% endfor %}
+</section>
