@@ -15,23 +15,58 @@ class Node
     @right = right
   end
 
-  def pre_order(node=self, &block)
+  def pre_order_recursive(node=self, &block)
     return if node.nil?
 
     yield node.value
-    pre_order(node.left,  &block)
-    pre_order(node.right, &block)
+    pre_order_recursive(node.left,  &block)
+    pre_order_recursive(node.right, &block)
   end
 
-  def in_order(node=self, &block)
+  def in_order_recursive(node=self, &block)
     return if node.nil?
 
-    in_order(node.left,  &block)
+    in_order_recursive(node.left,  &block)
     yield node.value
-    in_order(node.right, &block)
+    in_order_recursive(node.right, &block)
   end
 
-  def post_order(node=self, &block)
+  def post_order_recursive(node=self, &block)
+    return if node.nil?
+
+    post_order_recursive(node.left,  &block)
+    post_order_recursive(node.right, &block)
+    yield node.value
+  end
+
+  def pre_order_iterative(node=self)
+    stack = []
+    stack.push(node)
+
+    while !stack.empty?
+      node = stack.pop
+      yield node.value
+      stack.push(node.right) if node.right
+      stack.push(node.left)  if node.left
+    end
+  end
+
+  def in_order_iterative(node=self)
+    stack = []
+
+    while !stack.empty? || !node.nil?
+      if node
+        stack.push node
+        node = node.left
+      else
+        node = stack.pop
+        yield node.value
+        node = node.right
+      end
+    end
+  end
+
+  def post_order_iterative(node=self, &block)
     return if node.nil?
 
     post_order(node.left,  &block)
@@ -39,7 +74,7 @@ class Node
     yield node.value
   end
 
-  def level_order(node=self, &block)
+  def level_order_iterative(node=self, &block)
     queue = []
     queue.push node
     while !queue.empty?
@@ -72,9 +107,11 @@ f.left  = e
 f.right = g
 
 # show the traversal orders
-puts tree.pre_order   { |node| print node }  # DBACFEG
-puts tree.in_order    { |node| print node }  # ABCDEFG
-puts tree.post_order  { |node| print node }  # ACBEGFD
-puts tree.level_order { |node| print node }  # DBFACEG
+puts tree.pre_order_recursive   { |node| print node }  # DBACFEG
+puts tree.in_order_recursive    { |node| print node }  # ABCDEFG
+puts tree.post_order_recursive  { |node| print node }  # ACBEGFD
+puts tree.pre_order_iterative   { |node| print node }  # DBACFEG
+puts tree.in_order_iterative    { |node| print node }  # ABCDEFG
+puts tree.level_order_iterative { |node| print node }  # DBFACEG
 
 {% endhighlight %}
