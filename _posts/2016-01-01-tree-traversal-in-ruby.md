@@ -6,6 +6,8 @@ short_desc: Traversing a binary tree in different orders in Ruby.
 
 {% highlight ruby %}
 
+require 'set'
+
 class Node
   attr_accessor :value, :left, :right
 
@@ -67,22 +69,56 @@ class Node
   end
 
   def post_order_iterative(node=self, &block)
-    return if node.nil?
+    stack = []
+    last_node_visited = nil
 
-    post_order(node.left,  &block)
-    post_order(node.right, &block)
-    yield node.value
+    while !stack.empty? || !node.nil?
+      if node
+        stack.push node
+        node = node.left
+      else
+        peek_node = stack.last
+        if peek_node.right && last_node_visited != peek_node.right
+          node = peek_node.right
+        else
+          yield peek_node.value
+          last_node_visited = stack.pop
+        end
+      end
+    end
   end
 
   def level_order_iterative(node=self, &block)
     queue = []
     queue.push node
+
     while !queue.empty?
       node = queue.shift
       yield node.value
       queue.push node.left  if node.left
       queue.push node.right if node.right
     end
+  end
+
+  def graph_bfs(node=self)
+    queue = []
+    queue.push node
+    visited = Set.new
+
+    while !queue.empty?
+      node = queue.shift
+      yield node.value
+      visited.add?(node)
+
+      node.adjacents.each do |adjacent_node|
+        next if visited.include?(adjacent_node) || adjacent_node.nil?
+        queue.push(adjacent_node)
+      end
+    end
+  end
+
+  def adjacents
+    [@left, @right]
   end
 end
 
@@ -112,6 +148,8 @@ puts tree.in_order_recursive    { |node| print node }  # ABCDEFG
 puts tree.post_order_recursive  { |node| print node }  # ACBEGFD
 puts tree.pre_order_iterative   { |node| print node }  # DBACFEG
 puts tree.in_order_iterative    { |node| print node }  # ABCDEFG
+puts tree.post_order_iterative  { |node| print node }  # ACBEGFD
 puts tree.level_order_iterative { |node| print node }  # DBFACEG
+puts tree.graph_bfs             { |node| print node }  # DBFACEG
 
 {% endhighlight %}
